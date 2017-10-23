@@ -93,13 +93,8 @@
     SFMNode *newMove = [[SFMNode alloc] initWithMove:move andParent:_currentNode];
     
     if (![self atEnd]) {
-        if([move isEqual:_currentNode.next.move]){
-            newMove = _currentNode.next;
-        }
-        else{
-            [_currentNode.next.variations addObject:newMove];
-            [self.undoManager registerUndoWithTarget:self selector:@selector(removeSubtreeFromNode:) object:newMove];
-        }
+        [_currentNode.next.variations addObject:newMove];
+        [self.undoManager registerUndoWithTarget:self selector:@selector(removeSubtreeFromNode:) object:newMove];
     }
     else{
         _currentNode.next = newMove;
@@ -107,7 +102,6 @@
     }
     
     _currentNode = newMove;
-    [self.delegate chessGameStateDidChange:self];
     return YES;
 }
 
@@ -260,15 +254,10 @@
         [str appendString:@"\"]\n"];
     }
     
-    if (self.moveText) {
-        // Original move text was not modified
-        [str appendString:self.moveText];
-    } else {
-        [str appendString:@"\n"];
-        [str appendString:[[self moveTextString] string]];
-        [str appendFormat:@"%@\n\n", self.tags[@"Result"]];
-    }
-    
+    [str appendString:@"\n"];
+    [str appendString:[[self moveTextString] string]];
+    [str appendFormat:@"%@\n\n", self.tags[@"Result"]];
+
     return str;
 }
 
