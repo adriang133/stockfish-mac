@@ -111,7 +111,7 @@
 - (IBAction)doBestMove:(id)sender
 {
     if (self.engine.isAnalyzing) {
-        [self doMoveWithOverwritePrompt:[((SFMUCILine *)self.engine.lines[@(1)]).moves firstObject]];
+        [self doMove:[((SFMUCILine *)self.engine.lines[@(1)]).moves firstObject]];
     }
 }
 - (IBAction)increaseVariations:(id)sender {
@@ -388,6 +388,10 @@
 #pragma mark - SFMBoardViewDelegate
 
 - (void)boardView:(SFMBoardView *)boardView userDidMove:(SFMMove *)move {
+    [self doMove:move];
+}
+
+- (void)doMove:(SFMMove *)move {
     if(![self.currentGame atEnd]){
         SFMNode *existingVariation = [self.currentGame.currentNode.next existingVariationForMove:move];
         if(existingVariation){
@@ -401,7 +405,6 @@
     else{
         [self doMoveForced:move];
     }
-
 }
 
 - (void)doMoveWithOverwritePrompt:(SFMMove *)move {
